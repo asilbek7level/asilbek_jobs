@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil natijasi — 7Level</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="site-header"></div>
+    <main>
+        <div class="page-hero">
+            <div class="breadcrumb"><a href="index.html">Bosh sahifa</a> / <a href="test.html">Test</a> / Natija</div>
+            <div class="section-tag">Sizning profilingiz</div>
+            <h1 style="font-size:42px;margin:12px 0;">Kasbiy yo'nalish natijasi</h1>
+            <p style="color:rgba(255,255,255,.65);max-width:680px;margin:0 auto;">RIASEC qiziqishlari, ish qadriyatlari va ish uslubi asosida hisoblangan moslik foizi. Bu "yagona to'g'ri kasb" emas — izlash va tekshirish uchun yo'l-yo'riq.</p>
+        </div>
+
+        <div class="container narrow article" id="resultContainer">
+            <div class="loading-state">
+                <div class="spinner"></div>
+                <p>Natijalar hisoblanmoqda...</p>
+            </div>
+        </div>
+    </main>
+    <div id="site-footer"></div>
+    <script src="js/data.js"></script>
+    <script src="js/score.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        (function () {
+            const saved = loadProgress();
+            const container = document.getElementById('resultContainer');
+
+            if (!saved || !saved.result) {
+                container.innerHTML = `
+                    <div class="disclaimer" style="text-align:center;">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Natija topilmadi</h3>
+                        <p>Testni tugatmagansiz yoki ma'lumotlar yo'q qilingan. Testni qaytadan boshlang.</p>
+                        <a class="btn-primary" href="test.html" style="margin-top:16px;">Testni boshlash</a>
+                    </div>
+                `;
+                return;
+            }
+
+            const { riasecPct, valuesPct, stylePct, code, fields } = saved.result;
+            const topFields = fields.slice(0, 6);
+
+            container.innerHTML = `
+                <div class="disclaimer" style="animation-delay: 0.1s;">
+                    <strong><i class="fas fa-info-circle"></i> Muhim eslatma:</strong> Bu natija psixologik tashxis emas. Qiziqish inventarlarining o'rtacha "hit rate"i ~50% ekanligini tadqiqotlar ko'rsatadi. Shuning uchun natijani faqat boshlang'ich nuqta sifatida ishlating, albatta amaliy tekshiruv qiling.
+                </div>
+
+                <div class="result-section" style="animation-delay: 0.2s;">
+                    <h2><i class="fas fa-chart-radar"></i> RIASEC qiziqish profili</h2>
+                    <p>Sizning RIASEC kodingiz: <strong>${code}</strong>. Bu sizning qiziqishlarining uchta dominant yo'nalishini ko'rsatadi.</p>
+                    <div class="riasec-visual">
+                        ${Object.entries(riasecPct).map(([k, v]) => `
+                            <div class="trait-row">
+                                <div class="trait-top">
+                                    <span>${riasecMeta[k].name} (${k})</span>
+                                    <span>${v}%</span>
+                                </div>
+                                <div class="trait-bar">
+                                    <div class="trait-fill" style="width:${v}%;background:${riasecMeta[k].color}"></div>
+                                </div>
+                                <p style="font-size:13px;color:rgba(255,255,255,.5);margin-top:4px;">${riasecMeta[k].short}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="result-section" style="animation-delay: 0.3s;">
+                    <h2><i class="fas fa-heart"></i> Ish qadriyatlari</h2>
+                    <p>Ishda siz uchun eng muhim narsalar:</p>
+                    <div class="values-grid">
+                        ${Object.entries(valuesPct)
+                            .sort((a, b) => b[1] - a[1])
+                            .slice(0, 5)
+                            .map(([k, v]) => `
+                                <div class="value-card">
+                                    <div class="value-icon" style="color:var(--primary-light);font-size:24px;">${v > 70 ? '●' : v > 50 ? '○' : '○'}</div>
+                                    <div class="value-name">${valueMeta[k]}</div>
+                                    <div class="value-percent">${v}%</div>
+                                </div>
+                            `).join('')}
+                    </div>
+                </div>
+
+                <div class="result-section" style="animation-delay: 0.4s;">
+                    <h2><i class="fas fa-sliders-h"></i> Ish uslubi</h2>
+                    <p>Ish muhitida qanday his qilasiz va ishlaysiz:</p>
+                    <div class="style-grid">
+                        ${Object.entries(stylePct).map(([k, v]) => `
+                            <div class="style-item">
+                                <div class="style-label">
+                                    <span>${k.charAt(0).toUpperCase() + k.slice(1)}</span>
+                                    <span>${v}%</span>
+                                </div>
+                                <div class="style-bar">
+                                    <div class="style-fill" style="width:${v}%"></div>
+                                </div>
+                                <div class="style-desc">
+                                    <span style="color:rgba(255,255,255,.4);">${styleMeta[k].left}</span>
+                                    <span style="color:rgba(255,255,255,.4);">← →</span>
+                                    <span style="color:rgba(255,255,255,.4);">${styleMeta[k].right}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="result-section" style="animation-delay: 0.5s;">
+                    <h2><i class="fas fa-star"></i> Eng mos sohalar</h2>
+                    <p>Sizning profilizga eng mos keladigan sohalar (qiziqish + qadriyat mosligi asosida):</p>
+                    <div class="fields-rank">
+                        ${topFields.map((f, i) => `
+                            <a class="result-card" href="soha.html?id=${f.id}">
+                                <div class="rank">#${i + 1}</div>
+                                <div class="field-icon-small" style="background:${fieldsData.find(x => x.id === f.id)?.iconBg || 'rgba(108,92,231,0.2)'}">${f.icon}</div>
+                                <div class="field-info">
+                                    <h4>${f.name}</h4>
+                                    <p style="font-size:13px;color:rgba(255,255,255,.5);">${f.shortDesc}</p>
+                                </div>
+                                <div class="result-percent">${f.rel}%</div>
+                            </a>
+                        `).join('')}
+                    </div>
+                    <div style="text-align:center;margin-top:24px;">
+                        <a class="btn-secondary" href="sohalar.html">Barcha sohalarni ko'rish</a>
+                    </div>
+                </div>
+
+                <div class="result-section" style="animation-delay: 0.7s;">
+                    <h2><i class="fas fa-compass"></i> Keyingi qadamlar</h2>
+                    <p>Natijani amaliyotga o'tkazish uchun:</p>
+                    <ol class="action-steps">
+                        <li><strong>Top 3 sohani chuqur o'rganing:</strong> "Sohalar" sahifasiga o'ting, har birining ko'nikma, maosh va birinchi qadamlarini o'qing.</li>
+                        <li><strong>Amaliyot qiling:</strong> Har bir soha uchun kichik "micro-project" bajarishga harakat qiling (masalan, dasturlash uchun bir veb-sahifa yaratish).</li>
+                        <li><strong>Lavozimlarni solishtiring:</strong> LinkedIn, hh.uz yoki boshqa platformalarda hozirgi bozor narxi va talablarini ko'ring.</li>
+                        <li><strong>Kasb tanlash qaror siklidan foydalaning:</strong> <a href="qollanma-qaror.html">CASVE qaror sikli</a> bo'yicha yo'l-yo'riqni o'qing.</li>
+                        <li><strong>Tekshirib ko'ring:</strong> <a href="qollanma-amaliyot.html">Amaliyot qilish bo'yicha qo'llanma</a> orqali haqiqiy tajriba ortiring.</li>
+                    </ol>
+                </div>
+
+                <div class="result-section" style="animation-delay: 0.8s;">
+                    <h2><i class="fas fa-book"></i> Chuqurroq tushunish uchun</h2>
+                    <div class="guide-links">
+                        <a class="guide-link" href="qollanma-riasec.html">
+                            <i class="fas fa-dna"></i>
+                            <div>
+                                <h4>RIASEC modeli</h4>
+                                <p>Qiziqish turlari va ularning kasblarga bog'lanishi</p>
+                            </div>
+                        </a>
+                        <a class="guide-link" href="qollanma-qaror.html">
+                            <i class="fas fa-sync-alt"></i>
+                            <div>
+                                <h4>CASVE qaror sikli</h4>
+                                <p>Tushunish, kengaytirish, toraytirish, tanlash, baholash</p>
+                            </div>
+                        </a>
+                        <a class="guide-link" href="metodologiya.html">
+                            <i class="fas fa-flask"></i>
+                            <div>
+                                <h4>Metodologiya</h4>
+                                <p>Test qanday ishlaydi va uning cheklovlari</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div style="text-align:center;margin-top:40px;padding-top:40px;border-top:1px solid rgba(255,255,255,0.1);animation-delay: 0.9s;">
+                    <p style="color:rgba(255,255,255,.5);margin-bottom:16px;">Natijani qayta hisoblamoqchimisiz?</p>
+                    <button class="btn-secondary" onclick="localStorage.removeItem(STORAGE_KEY);location.href='test.html';">
+                        <i class="fas fa-redo"></i> Testni qaytadan boshlash
+                    </button>
+                </div>
+            `;
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soha — 7Level</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="site-header"></div>
+    <main>
+        <div class="page-hero" style="text-align:left;max-width:900px;margin:0 auto;">
+            <div class="breadcrumb"><a href="index.html">Bosh sahifa</a> / <a href="sohalar.html">Sohalar</a> / <span id="crumb"></span></div>
+            <div id="head"></div>
+        </div>
+        <div class="container narrow article" id="body"></div>
+    </main>
+    <div id="site-footer"></div>
+    <script src="js/data.js"></script>
+    <script src="js/common.js"></script>
+    <script>
+        const id = new URLSearchParams(location.search).get('id');
+        const field = fieldsData.find(f => f.id === id) || fieldsData[0];
+        document.title = field.name + ' — 7Level';
+        document.getElementById('crumb').textContent = field.name;
+        document.getElementById('head').innerHTML = `
+            <div class="detail-header">
+                <div class="field-icon" style="background:${field.iconBg};font-size:32px;">${field.icon}</div>
+                <div>
+                    <h1 style="font-size:36px;margin-bottom:8px;">${field.name}</h1>
+                    <span class="demand-badge ${field.demand === 'high' ? 'demand-high' : field.demand === 'medium' ? 'demand-medium' : 'demand-growing'}">${field.demandLabel}</span>
+                </div>
+            </div>
+            <p style="color:rgba(255,255,255,.7);font-size:18px;">${field.fullDesc}</p>
+        `;
+        const code = Object.entries(field.riasec).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k])=>k).join('');
+        document.getElementById('body').innerHTML = `
+            <div class="modal-section">
+                <h3><i class="fas fa-dna"></i> Tipik RIASEC og'irligi</h3>
+                <p>Bu sohada ko'p uchraydigan qiziqish aralashmasi (kod: <strong>${code}</strong>). Sizning kodingiz boshqacha bo'lishi mumkin — moslik foizi test natijasida chiqadi.</p>
+                ${Object.entries(field.riasec).map(([k,v]) => `
+                    <div class="trait-row">
+                        <div class="trait-top"><span>${riasecMeta[k].name}</span><span>${v}%</span></div>
+                        <div class="trait-bar"><div class="trait-fill" style="width:${v}%;background:${riasecMeta[k].color}"></div></div>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="modal-section">
+                <h3><i class="fas fa-cogs"></i> Ko'nikmalar</h3>
+                <ul>${field.skills.map(s=>`<li>${s}</li>`).join('')}</ul>
+            </div>
+            <div class="modal-section">
+                <h3><i class="fas fa-briefcase"></i> Kasblar</h3>
+                <ul>${field.careers.map(s=>`<li>${s}</li>`).join('')}</ul>
+            </div>
+            <div class="modal-section">
+                <h3><i class="fas fa-money-bill-wave"></i> Maosh (O'zbekiston, orientir)</h3>
+                <div class="salary-range">
+                    <div class="salary-item"><div class="label">Boshlang'ich</div><div class="value">${field.salaryMin}</div></div>
+                    <div class="salary-item"><div class="label">O'rta</div><div class="value">${field.salaryMid}</div></div>
+                    <div class="salary-item"><div class="label">Yuqori</div><div class="value">${field.salaryMax}</div></div>
+                </div>
+                <p class="source-note">Raqamlar ommaviy e'lonlar va soha suhbatlariga asoslangan taxminiy diapazon. Shahar, til, tajriba va masofaviy ish farq qiladi.</p>
+            </div>
+            <div class="modal-section">
+                <h3><i class="fas fa-chart-line"></i> Bozor</h3>
+                <p>${field.marketInfo}</p>
+                <div class="demand-bar"><div class="demand-fill" style="width:${field.demandPercent}%"></div></div>
+                <p style="font-size:13px;color:rgba(255,255,255,.4);margin-top:8px;">Talab indeksi (ichki shkala): ${field.demandPercent}% · o'sish belgisi ${field.growthRate}</p>
+            </div>
+            <div class="modal-section">
+                <h3><i class="fas fa-eye"></i> Istiqbol</h3>
+                <p>${field.futureOutlook}</p>
+            </div>
+            <div class="modal-section">
+                <h3><i class="fas fa-shoe-prints"></i> Birinchi qadamlar</h3>
+                <ul>${field.firstSteps.map(s=>`<li>${s}</li>`).join('')}</ul>
+            </div>
+            <p><a class="btn-primary" href="test.html">Mosligimni o'lchash</a></p>
+        `;
+    </script>
+</body>
+</html>

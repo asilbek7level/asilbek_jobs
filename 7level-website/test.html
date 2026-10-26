@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yo'nalish testi — 7Level</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="site-header"></div>
+    <main>
+        <div class="page-hero">
+            <div class="breadcrumb"><a href="index.html">Bosh sahifa</a> / Test</div>
+            <div class="section-tag">60 savol · 12–15 daqiqa</div>
+            <h1 style="font-size:40px;margin:12px 0;">Yo'nalish profili</h1>
+            <p style="color:rgba(255,255,255,.65);max-width:680px;margin:0 auto;">Har bir bandni 1–5 shkalada belgilang. “To'g'ri kasb” yo'q — qiziqish, qadriyat va uslubning kombinatsiyasi bor. O'rtada qolish mumkin; majburiy ikkilik yo'q.</p>
+        </div>
+        <div class="test-wrap">
+            <div class="test-card">
+                <div class="test-progress">
+                    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+                    <div class="progress-text" id="progressText">1 / 60</div>
+                </div>
+                <div class="section-pills" id="sectionPills"></div>
+                <div class="test-question">
+                    <h3 id="questionTitle"></h3>
+                    <p id="questionSubtitle"></p>
+                </div>
+                <div class="likert" id="likertBox"></div>
+                <div class="test-nav">
+                    <button class="test-btn test-btn-prev" id="prevBtn" type="button"><i class="fas fa-arrow-left"></i> Orqaga</button>
+                    <button class="test-btn" id="restartBtn" type="button" style="background:transparent;border:1px solid rgba(255,255,255,.15);">Qayta</button>
+                    <button class="test-btn test-btn-next" id="nextBtn" type="button">Keyingi <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            <p class="source-note" style="text-align:center;">Ilhom: Holland RIASEC / O*NET Interest Profiler mantiqi, Super ish qadriyatlari, Big Five uzluksiz o'qlar. Bu litsenziyalangan testning nusxasi emas.</p>
+        </div>
+    </main>
+    <div id="site-footer"></div>
+    <script src="js/data.js"></script>
+    <script src="js/test-data.js"></script>
+    <script src="js/score.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/test.js"></script>
+</body>
+</html>
